@@ -54,14 +54,16 @@
           class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl"
         >
           <div
-            class="h-32 bg-gradient-to-r from-emerald-900 to-slate-900 relative"
+            id="profileBanner"
+            class="h-32 bg-gradient-to-r from-emerald-900 to-slate-900 relative transition-colors duration-500"
           >
             <div class="absolute -bottom-12 left-8">
               <div
                 class="w-24 h-24 rounded-full bg-slate-800 border-4 border-slate-900 flex items-center justify-center shadow-lg"
               >
                 <svg
-                  class="w-12 h-12 text-emerald-500"
+                  id="profileIcon"
+                  class="w-12 h-12 text-emerald-500 transition-colors duration-500"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -83,15 +85,19 @@
                 <h1 class="text-3xl font-bold text-white">
                   <%= doctor.name %>
                 </h1>
+
+                <% const isActive = true; %>
+
                 <p
-                  class="text-emerald-400 text-sm mt-1 flex items-center gap-2"
+                  class="text-sm mt-1 flex items-center gap-2 <%= isActive ? 'text-emerald-400' : 'text-red-400' %>"
                 >
                   <span
-                    class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"
+                    class="w-2 h-2 rounded-full animate-pulse <%= isActive ? 'bg-emerald-500' : 'bg-red-500' %>"
                   ></span>
-                  Aktif Praktik
+                  <%= isActive ? 'Aktif Praktik' : 'Tidak Aktif' %>
                 </p>
               </div>
+
               <a
                 href="/admin/doctors/<%= doctor.doctorIdHash %>/edit"
                 class="text-sm bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-4 py-2 rounded-lg transition-colors"
@@ -123,7 +129,10 @@
                   >Spesialisasi</label
                 >
                 <div class="flex items-center gap-3">
-                  <span class="text-slate-200"
+                  <span
+                    id="specData"
+                    class="text-slate-200"
+                    data-spec="<%= doctor.specialization %>"
                     ><%= doctor.specialization %></span
                   >
                 </div>
@@ -148,5 +157,60 @@
         </div>
       </div>
     </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const specElement = document.getElementById("specData");
+        const banner = document.getElementById("profileBanner");
+        const icon = document.getElementById("profileIcon");
+
+        if (specElement) {
+          const spec = (
+            specElement.getAttribute("data-spec") || ""
+          ).toLowerCase();
+
+          // Config Warna Tema Spesialis
+          let theme = { from: "from-emerald-900", text: "text-emerald-500" };
+
+          if (spec.includes("anak"))
+            theme = { from: "from-pink-900", text: "text-pink-500" };
+          else if (spec.includes("bedah"))
+            theme = { from: "from-red-900", text: "text-red-500" };
+          else if (spec.includes("gigi"))
+            theme = { from: "from-orange-900", text: "text-orange-500" };
+          else if (spec.includes("jantung"))
+            theme = { from: "from-rose-900", text: "text-rose-500" };
+          else if (spec.includes("saraf") || spec.includes("neurologi"))
+            theme = { from: "from-purple-900", text: "text-purple-500" };
+          else if (spec.includes("mata"))
+            theme = { from: "from-teal-900", text: "text-teal-500" };
+          else if (spec.includes("umum"))
+            theme = { from: "from-slate-700", text: "text-slate-400" };
+          else if (spec.includes("penyakit dalam"))
+            theme = { from: "from-indigo-900", text: "text-indigo-500" };
+          else if (spec.includes("kandungan"))
+            theme = { from: "from-fuchsia-900", text: "text-fuchsia-500" };
+          else if (spec.includes("tht"))
+            theme = { from: "from-lime-900", text: "text-lime-500" };
+          else if (spec.includes("kulit"))
+            theme = { from: "from-amber-900", text: "text-amber-500" };
+          else if (spec.includes("jiwa") || spec.includes("psikiatri"))
+            theme = { from: "from-violet-900", text: "text-violet-500" };
+          else if (spec.includes("radiologi"))
+            theme = { from: "from-cyan-900", text: "text-cyan-500" };
+          else if (spec.includes("orthopedi"))
+            theme = { from: "from-sky-900", text: "text-sky-500" };
+
+          // Apply Styles (Banner & Icon Only)
+          banner.classList.remove("from-emerald-900");
+          banner.classList.add(theme.from);
+
+          icon.classList.remove("text-emerald-500");
+          icon.classList.add(theme.text);
+
+          // Note: Status Text gak disentuh sama script ini, jadi tetep ikut settingan HTML (Hijau)
+        }
+      });
+    </script>
   </body>
 </html>
