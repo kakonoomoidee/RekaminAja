@@ -1,21 +1,152 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Doctor Detail</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profil Dokter – RekaminAja</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              mono: ["JetBrains Mono", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
   </head>
-  <body
-    class="bg-slate-900 text-white flex justify-center items-center min-h-screen"
-  >
-    <div class="bg-slate-800 p-6 rounded w-full max-w-md space-y-3">
-      <h2 class="text-xl font-bold">Detail Dokter</h2>
+  <body class="bg-slate-950 text-slate-200 font-sans antialiased">
+    <%- include("../partials/navbar") %>
 
-      <p><b>ID:</b> <%= doctor.doctorId %></p>
-      <p><b>Nama:</b> <%= doctor.name %></p>
-      <p><b>Spesialis:</b> <%= doctor.specialization %></p>
-      <p class="text-xs text-slate-400">Hash: <%= doctor.doctorIdHash %></p>
+    <main class="pl-64 min-h-screen">
+      <div class="p-8 max-w-4xl mx-auto">
+        <a
+          href="/admin/doctors"
+          class="inline-flex items-center text-sm text-slate-400 hover:text-white mb-6 transition-colors group"
+        >
+          <svg
+            class="w-4 h-4 mr-1 group-hover:-translate-x-1 transition-transform"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+          Kembali ke Daftar
+        </a>
 
-      <a href="/admin/doctors" class="text-blue-400">← Kembali</a>
-    </div>
+        <div
+          class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl"
+        >
+          <div
+            class="h-32 bg-gradient-to-r from-emerald-900 to-slate-900 relative"
+          >
+            <div class="absolute -bottom-12 left-8">
+              <div
+                class="w-24 h-24 rounded-full bg-slate-800 border-4 border-slate-900 flex items-center justify-center shadow-lg"
+              >
+                <svg
+                  class="w-12 h-12 text-emerald-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-16 pb-8 px-8">
+            <div class="flex justify-between items-start mb-6">
+              <div>
+                <h1 class="text-3xl font-bold text-white">
+                  <%= doctor.name %>
+                </h1>
+                <p
+                  class="text-emerald-400 text-sm mt-1 flex items-center gap-2"
+                >
+                  <span
+                    class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"
+                  ></span>
+                  Aktif Praktik
+                </p>
+              </div>
+              <a
+                href="/admin/doctors/<%= doctor.doctorIdHash %>/edit"
+                class="text-sm bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-4 py-2 rounded-lg transition-colors"
+              >
+                Edit Data
+              </a>
+            </div>
+
+            <div class="grid gap-6">
+              <div
+                class="bg-slate-950/50 p-5 rounded-xl border border-slate-800"
+              >
+                <label
+                  class="text-xs text-slate-500 uppercase tracking-widest font-semibold mb-2 block"
+                  >Doctor ID (SIP/NIP)</label
+                >
+                <div class="flex items-center gap-3">
+                  <code class="font-mono text-lg text-white"
+                    ><%= doctor.doctorId %></code
+                  >
+                </div>
+              </div>
+
+              <div
+                class="bg-slate-950/50 p-5 rounded-xl border border-slate-800"
+              >
+                <label
+                  class="text-xs text-slate-500 uppercase tracking-widest font-semibold mb-2 block"
+                  >Spesialisasi</label
+                >
+                <div class="flex items-center gap-3">
+                  <span class="text-slate-200"
+                    ><%= doctor.specialization %></span
+                  >
+                </div>
+              </div>
+
+              <div
+                class="bg-slate-950/50 p-5 rounded-xl border border-slate-800"
+              >
+                <label
+                  class="text-xs text-slate-500 uppercase tracking-widest font-semibold mb-2 block"
+                  >Blockchain Hash Identity</label
+                >
+                <div class="flex items-center gap-3">
+                  <code
+                    class="flex-1 font-mono text-xs text-slate-500 break-all"
+                    ><%= doctor.doctorIdHash %></code
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
   </body>
 </html>
