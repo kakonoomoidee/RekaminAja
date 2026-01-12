@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tambah Rekam Medis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-900 text-white">
+    <%- include("../partials/navbar") %>
+
+    <div class="p-6 max-w-xl mx-auto">
+      <h1 class="text-2xl font-bold mb-6">Tambah Rekam Medis</h1>
+
+      <form method="POST" action="/admin/medical/add" class="space-y-4">
+        <input type="hidden" name="patientHash" value="<%= patientHash %>" />
+
+        <!-- DOKTER -->
+        <select
+          name="doctorHash"
+          class="w-full p-2 text-black rounded"
+          required
+        >
+          <option value="">-- Pilih Dokter --</option>
+          <% doctors.forEach(d => { %>
+          <option value="<%= d.doctorIdHash %>">
+            <%= d.name %> - <%= d.specialization %>
+          </option>
+          <% }) %>
+        </select>
+
+        <!-- DIAGNOSIS -->
+        <textarea
+          name="diagnosis"
+          required
+          placeholder="Diagnosis"
+          class="w-full p-2 text-black rounded"
+        ></textarea>
+
+        <!-- TINDAKAN -->
+        <textarea
+          name="treatment"
+          required
+          placeholder="Tindakan / Terapi"
+          class="w-full p-2 text-black rounded"
+        ></textarea>
+
+        <button class="bg-green-600 px-4 py-2 rounded">
+          Simpan Rekam Medis
+        </button>
+      </form>
+    </div>
+  </body>
+</html>

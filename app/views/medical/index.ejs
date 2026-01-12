@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Rekam Medis</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-white">
+  <%- include("../partials/navbar") %>
+
+  <div class="p-6 max-w-5xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6">Rekam Medis Pasien</h1>
+
+    <!-- FILTER PASIEN -->
+    <form method="GET" action="/admin/medical" class="mb-6 flex gap-3">
+      <select
+        name="patientHash"
+        class="p-2 text-black rounded w-full"
+        required
+      >
+        <option value="">-- Pilih Pasien --</option>
+        <% patients.forEach(p => { %>
+          <option
+            value="<%= p.nikHash %>"
+            <%= p.nikHash === patientHash ? "selected" : "" %>
+          >
+            <%= p.name %>
+          </option>
+        <% }) %>
+      </select>
+
+      <button class="bg-blue-600 px-4 py-2 rounded">
+        Lihat
+      </button>
+    </form>
+
+    <% if (!patientHash) { %>
+      <p class="text-slate-400">
+        Silakan pilih pasien untuk melihat rekam medis
+      </p>
+    <% } else { %>
+
+      <a
+        href="/admin/medical/add?patientHash=<%= patientHash %>"
+        class="inline-block mb-4 bg-green-600 px-4 py-2 rounded"
+      >
+        + Tambah Rekam Medis
+      </a>
+
+      <% if (records.length === 0) { %>
+        <p class="text-slate-400">Belum ada rekam medis</p>
+      <% } else { %>
+
+      <table class="w-full text-sm border border-slate-700">
+        <thead class="bg-slate-800">
+          <tr>
+            <th class="p-2 border">No</th>
+            <th class="p-2 border">Dokter</th>
+            <th class="p-2 border">Waktu</th>
+            <th class="p-2 border">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% records.forEach((r, i) => { %>
+          <tr class="hover:bg-slate-800">
+            <td class="p-2 text-center"><%= i + 1 %></td>
+            <td class="p-2 text-xs break-all">
+              <%= r.doctorIdHash %>
+            </td>
+            <td class="p-2">
+              <%= new Date(r.timestamp * 1000).toLocaleString() %>
+            </td>
+            <td class="p-2">
+              <a
+                href="/admin/medical/<%= patientHash %>/<%= r.index %>"
+                class="text-blue-400 hover:underline"
+              >
+                Detail
+              </a>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+
+      <% } %>
+    <% } %>
+  </div>
+</body>
+</html>
