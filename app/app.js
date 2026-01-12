@@ -6,6 +6,7 @@ const path = require("path");
 const authRoutes = require("./routes/auth.routes");
 const adminRoutes = require("./routes/admin.routes");
 const patientRoutes = require("./routes/patient.routes");
+const doctorRoutes = require("./routes/doctor.routes");
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(
 app.use("/", authRoutes);
 app.use("/admin", adminRoutes);
 app.use("/admin/patients", patientRoutes);
+app.use("/admin/doctors", doctorRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`🚀 http://localhost:${process.env.PORT}`);

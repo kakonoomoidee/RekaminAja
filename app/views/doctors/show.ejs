@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Doctor Detail</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="bg-slate-900 text-white flex justify-center items-center min-h-screen"
+  >
+    <div class="bg-slate-800 p-6 rounded w-full max-w-md space-y-3">
+      <h2 class="text-xl font-bold">Detail Dokter</h2>
+
+      <p><b>ID:</b> <%= doctor.doctorId %></p>
+      <p><b>Nama:</b> <%= doctor.name %></p>
+      <p><b>Spesialis:</b> <%= doctor.specialization %></p>
+      <p class="text-xs text-slate-400">Hash: <%= doctor.doctorIdHash %></p>
+
+      <a href="/admin/doctors" class="text-blue-400">← Kembali</a>
+    </div>
+  </body>
+</html>

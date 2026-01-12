@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Edit Doctor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="bg-slate-900 text-white flex justify-center items-center min-h-screen"
+  >
+    <form
+      method="POST"
+      class="bg-slate-800 p-6 rounded w-full max-w-md space-y-4"
+    >
+      <h2 class="text-xl font-bold">Edit Dokter</h2>
+
+      <input
+        value="<%= doctor.doctorId %>"
+        disabled
+        class="w-full p-2 bg-slate-700 rounded"
+      />
+      <input
+        name="name"
+        value="<%= doctor.name %>"
+        class="w-full p-2 bg-slate-700 rounded"
+      />
+      <input
+        name="specialization"
+        value="<%= doctor.specialization %>"
+        class="w-full p-2 bg-slate-700 rounded"
+      />
+
+      <button class="w-full bg-yellow-500 py-2 rounded">Update</button>
+    </form>
+  </body>
+</html>
