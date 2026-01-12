@@ -13,9 +13,28 @@ contract MedicalRecordSystem {
 
     mapping(address => Admin) public admins;
 
+    modifier onlyAdmin() {
+        require(admins[msg.sender].exists, "Not authorized admin");
+        _;
+    }
+
+    constructor(string memory _username) {
+        admins[msg.sender] = Admin(
+            _username,
+            msg.sender,
+            block.timestamp,
+            true
+        );
+    }
+
+    function isAdmin(address account) external view returns (bool) {
+        return admins[account].exists;
+    }
+
     /* ========== DOCTOR ========== */
 
     struct Doctor {
+        bytes32 doctorIdHash;
         string doctorId;
         string name;
         string specialization;
@@ -24,6 +43,54 @@ contract MedicalRecordSystem {
     }
 
     mapping(bytes32 => Doctor) public doctors;
+    bytes32[] private doctorIndex;
+
+    function registerDoctor(
+        string calldata doctorId,
+        string calldata name,
+        string calldata specialization
+    ) external onlyAdmin {
+        bytes32 hashId = keccak256(abi.encodePacked(doctorId));
+        require(!doctors[hashId].exists, "Doctor exists");
+
+        doctors[hashId] = Doctor(
+            hashId,
+            doctorId,
+            name,
+            specialization,
+            block.timestamp,
+            true
+        );
+
+        doctorIndex.push(hashId);
+    }
+
+    function updateDoctor(
+        bytes32 doctorIdHash,
+        string calldata name,
+        string calldata specialization
+    ) external onlyAdmin {
+        require(doctors[doctorIdHash].exists, "Doctor not found");
+
+        doctors[doctorIdHash].name = name;
+        doctors[doctorIdHash].specialization = specialization;
+    }
+
+    function deleteDoctor(bytes32 doctorIdHash) external onlyAdmin {
+        require(doctors[doctorIdHash].exists, "Doctor not found");
+        doctors[doctorIdHash].exists = false;
+    }
+
+    function getDoctorCount() external view returns (uint256) {
+        return doctorIndex.length;
+    }
+
+    function getDoctorByIndex(
+        uint256 index
+    ) external view returns (Doctor memory) {
+        require(index < doctorIndex.length, "Index out of bounds");
+        return doctors[doctorIndex[index]];
+    }
 
     /* ========== PATIENT ========== */
 
@@ -36,8 +103,54 @@ contract MedicalRecordSystem {
     }
 
     mapping(bytes32 => Patient) public patients;
+    bytes32[] private patientIndex;
 
-    /* ========== MEDICAL RECORD ========== */
+    function registerPatient(
+        bytes32 nikHash,
+        string calldata name,
+        bytes32 addressHash
+    ) external onlyAdmin {
+        require(!patients[nikHash].exists, "Patient exists");
+
+        patients[nikHash] = Patient(
+            nikHash,
+            name,
+            addressHash,
+            block.timestamp,
+            true
+        );
+
+        patientIndex.push(nikHash);
+    }
+
+    function updatePatient(
+        bytes32 nikHash,
+        string calldata name,
+        bytes32 addressHash
+    ) external onlyAdmin {
+        require(patients[nikHash].exists, "Patient not found");
+
+        patients[nikHash].name = name;
+        patients[nikHash].addressHash = addressHash;
+    }
+
+    function deletePatient(bytes32 nikHash) external onlyAdmin {
+        require(patients[nikHash].exists, "Patient not found");
+        patients[nikHash].exists = false;
+    }
+
+    function getPatientCount() external view returns (uint256) {
+        return patientIndex.length;
+    }
+
+    function getPatientByIndex(
+        uint256 index
+    ) external view returns (Patient memory) {
+        require(index < patientIndex.length, "Index out of bounds");
+        return patients[patientIndex[index]];
+    }
+
+    /* ========== MEDICAL RECORD (IMMUTABLE) ========== */
 
     struct MedicalRecord {
         bytes32 patientNikHash;
@@ -48,86 +161,6 @@ contract MedicalRecordSystem {
     }
 
     mapping(bytes32 => MedicalRecord[]) private medicalRecords;
-
-    /* ========== MODIFIERS ========== */
-
-    modifier onlyAdmin() {
-        require(admins[msg.sender].exists, "Not authorized admin");
-        _;
-    }
-
-    /* ========== CONSTRUCTOR ========== */
-
-    constructor(string memory _username) {
-        Admin storage admin = admins[msg.sender];
-        admin.username = _username;
-        admin.publicKey = msg.sender;
-        admin.registeredAt = block.timestamp;
-        admin.exists = true;
-    }
-
-    /* ========== ADMIN FUNCTIONS ========== */
-
-    function registerAdmin(
-        address adminAddress,
-        string calldata username
-    ) external onlyAdmin {
-        Admin storage admin = admins[adminAddress];
-        admin.username = username;
-        admin.publicKey = adminAddress;
-        admin.registeredAt = block.timestamp;
-        admin.exists = true;
-    }
-
-    function isAdmin(address account) external view returns (bool) {
-        return admins[account].exists;
-    }
-
-    /* ========== DOCTOR FUNCTIONS ========== */
-
-    function registerDoctor(
-        string calldata doctorId,
-        string calldata name,
-        string calldata specialization
-    ) external onlyAdmin {
-        bytes32 doctorHash = keccak256(abi.encodePacked(doctorId));
-
-        Doctor storage doctor = doctors[doctorHash];
-        doctor.doctorId = doctorId;
-        doctor.name = name;
-        doctor.specialization = specialization;
-        doctor.registeredAt = block.timestamp;
-        doctor.exists = true;
-    }
-
-    function getDoctor(
-        bytes32 doctorIdHash
-    ) external view returns (Doctor memory) {
-        return doctors[doctorIdHash];
-    }
-
-    /* ========== PATIENT FUNCTIONS ========== */
-
-    function registerPatient(
-        bytes32 nikHash,
-        string calldata name,
-        bytes32 addressHash
-    ) external onlyAdmin {
-        Patient storage patient = patients[nikHash];
-        patient.nikHash = nikHash;
-        patient.name = name;
-        patient.addressHash = addressHash;
-        patient.registeredAt = block.timestamp;
-        patient.exists = true;
-    }
-
-    function getPatient(
-        bytes32 nikHash
-    ) external view returns (Patient memory) {
-        return patients[nikHash];
-    }
-
-    /* ========== MEDICAL RECORD FUNCTIONS ========== */
 
     function addMedicalRecord(
         bytes32 patientNikHash,
@@ -158,19 +191,8 @@ contract MedicalRecordSystem {
     function getMedicalRecord(
         bytes32 patientNikHash,
         uint256 index
-    )
-        external
-        view
-        onlyAdmin
-        returns (bytes32, bytes32, string memory, bytes32, uint256)
-    {
-        MedicalRecord memory record = medicalRecords[patientNikHash][index];
-        return (
-            record.patientNikHash,
-            record.doctorIdHash,
-            record.encryptedData,
-            record.dataHash,
-            record.timestamp
-        );
+    ) external view onlyAdmin returns (MedicalRecord memory) {
+        require(index < medicalRecords[patientNikHash].length, "Out of bounds");
+        return medicalRecords[patientNikHash][index];
     }
 }
