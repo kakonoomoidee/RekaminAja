@@ -10,20 +10,13 @@
     <div class="p-6 max-w-xl">
       <h1 class="text-xl font-bold mb-4">Edit Pasien</h1>
 
-      <form
-        method="POST"
-        action="/admin/patients/<%= patient.id %>/edit"
-        class="space-y-4"
-      >
+      <form method="POST" action="/admin/patients/<%= patient.nikHash %>/edit">
         <input
-          value="<%= patient.name %>"
           name="name"
+          value="<%= patient.name %>"
           class="w-full p-2 text-black"
         />
-        <textarea name="address" class="w-full p-2 text-black">
-<%= patient.address %>
-      </textarea
-        >
+        <textarea name="address" class="w-full p-2 text-black"></textarea>
 
         <button class="bg-yellow-600 px-4 py-2 rounded">Update</button>
       </form>

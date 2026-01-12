@@ -1,3 +1,4 @@
+// app/controllers/patient.controller.js
 const contract = require("../config/contract");
 const web3 = require("../config/web3");
 
@@ -40,7 +41,7 @@ exports.addPage = (req, res) => {
 };
 
 /**
- * STORE PASIEN
+ * STORE
  */
 exports.store = async (req, res) => {
   try {
@@ -62,7 +63,7 @@ exports.store = async (req, res) => {
 };
 
 /**
- * DETAIL PASIEN
+ * DETAIL
  */
 exports.show = async (req, res) => {
   try {
@@ -71,9 +72,7 @@ exports.show = async (req, res) => {
 
     if (!p.exists) return res.send("Pasien tidak ditemukan");
 
-    res.render("patients/show", {
-      patient: p,
-    });
+    res.render("patients/show", { patient: p });
   } catch (err) {
     console.error(err);
     res.send("Gagal ambil detail pasien");
@@ -89,7 +88,10 @@ exports.editPage = async (req, res) => {
     const p = await contract.methods.patients(nikHash).call();
 
     res.render("patients/edit", {
-      patient: p,
+      patient: {
+        nikHash,
+        name: p.name,
+      },
     });
   } catch (err) {
     console.error(err);
@@ -98,7 +100,7 @@ exports.editPage = async (req, res) => {
 };
 
 /**
- * UPDATE PASIEN
+ * UPDATE
  */
 exports.update = async (req, res) => {
   try {
@@ -120,7 +122,7 @@ exports.update = async (req, res) => {
 };
 
 /**
- * DELETE PASIEN
+ * DELETE
  */
 exports.destroy = async (req, res) => {
   try {

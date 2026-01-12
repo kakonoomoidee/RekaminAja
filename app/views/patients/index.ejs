@@ -25,27 +25,24 @@
           </tr>
         </thead>
         <tbody>
-          <% if (patients.length === 0) { %>
-          <tr>
-            <td colspan="4" class="text-center p-4 text-slate-400">
-              Belum ada data pasien
-            </td>
-          </tr>
-          <% } %> <% patients.forEach((p, i) => { %>
+          <% patients.forEach((p, i) => { %>
           <tr class="border">
             <td class="p-2 text-center"><%= i + 1 %></td>
             <td class="p-2"><%= p.name %></td>
             <td class="p-2 text-xs"><%= p.nikHash %></td>
             <td class="p-2 space-x-2">
-              <a href="/admin/patients/<%= p.id %>" class="text-blue-400"
+              <a href="/admin/patients/<%= p.nikHash %>" class="text-blue-400"
                 >Detail</a
               >
-              <a href="/admin/patients/<%= p.id %>/edit" class="text-yellow-400"
+              <a
+                href="/admin/patients/<%= p.nikHash %>/edit"
+                class="text-yellow-400"
                 >Edit</a
               >
+
               <form
                 method="POST"
-                action="/admin/patients/<%= p.id %>/delete"
+                action="/admin/patients/<%= p.nikHash %>/delete"
                 class="inline"
               >
                 <button
