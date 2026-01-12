@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard Admin – RekaminAja</title>
+
+    <style>
+      body {
+        font-family: sans-serif;
+        background: #020617;
+        color: white;
+        padding: 30px;
+      }
+      .card {
+        background: #0f172a;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+      }
+      a {
+        color: #60a5fa;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include("partials/navbar") %>
+
+    <h1>📊 Admin Dashboard</h1>
+
+    <div class="card">
+      <p><b>Admin Address:</b></p>
+      <pre><%= admin %></pre>
+    </div>
+
+    <div class="card">
+      <h3>Status</h3>
+      <ul>
+        <li>✅ Login via blockchain signature</li>
+        <li>✅ Admin verified on-chain</li>
+        <li>✅ Session aktif</li>
+      </ul>
+    </div>
+
+    <a href="/logout">Logout</a>
+
+    <script>
+      // OPTIONAL: clear private key on logout manually
+      localStorage.removeItem("admin_private_key");
+    </script>
+  </body>
+</html>

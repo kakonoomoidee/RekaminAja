@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin Login – RekaminAja</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- ✅ Web3 v1 (UMD, GLOBAL) -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+  </head>
+
+  <body
+    class="bg-slate-900 flex items-center justify-center min-h-screen text-white"
+  >
+    <div class="bg-slate-950 w-full max-w-md p-8 rounded-xl shadow-lg">
+      <h2 class="text-2xl font-bold mb-1">🔐 Admin Login</h2>
+      <p class="text-sm text-slate-400 mb-6">
+        Blockchain Signature Authentication
+      </p>
+
+      <form method="POST" action="/login" id="loginForm" class="space-y-4">
+        <input type="hidden" name="address" id="address" />
+        <input type="hidden" name="signature" id="signature" />
+
+        <div>
+          <label class="block text-sm mb-1 text-slate-300">
+            Private Key (sekali saja)
+          </label>
+          <input
+            type="password"
+            id="privateKey"
+            placeholder="0x..."
+            class="w-full px-3 py-2 rounded bg-slate-800 border border-slate-700"
+          />
+        </div>
+
+        <button
+          type="button"
+          onclick="login()"
+          class="w-full bg-blue-600 hover:bg-blue-700 font-semibold py-2 rounded"
+        >
+          Login
+        </button>
+      </form>
+    </div>
+
+    <script>
+      const NONCE = "<%= nonce %>";
+
+      async function login() {
+        try {
+          if (typeof Web3 === "undefined") {
+            alert("Web3 gagal dimuat (CDN)");
+            return;
+          }
+
+          let privateKey = localStorage.getItem("admin_private_key");
+
+          if (!privateKey) {
+            privateKey = document.getElementById("privateKey").value.trim();
+
+            if (!privateKey.startsWith("0x") || privateKey.length !== 66) {
+              alert("Private key tidak valid");
+              return;
+            }
+
+            localStorage.setItem("admin_private_key", privateKey);
+          }
+
+          const web3 = new Web3(); // ✅ FIX
+          const account = web3.eth.accounts.privateKeyToAccount(privateKey);
+          const signed = account.sign(NONCE);
+
+          document.getElementById("address").value = account.address;
+          document.getElementById("signature").value = signed.signature;
+
+          document.getElementById("loginForm").submit();
+        } catch (err) {
+          alert("Login gagal: " + err.message);
+        }
+      }
+    </script>
+  </body>
+</html>
