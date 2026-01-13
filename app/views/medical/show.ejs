@@ -84,10 +84,9 @@
                     class="bg-slate-950/90 p-6 rounded-lg border border-slate-800/50 shadow-inner h-full backdrop-blur-sm"
                   >
                     <pre
+                      id="jsonOutput"
                       class="font-mono text-sm leading-relaxed text-emerald-400 whitespace-pre overflow-x-auto"
-                    >
-<%= record.decryptedData %></pre
-                    >
+                    ></pre>
                   </div>
                 </div>
               </div>
@@ -210,5 +209,21 @@
         </div>
       </div>
     </main>
+
+    <script>
+      const rawData = `<%- record.decryptedData.replace(/\\/g, '\\\\').replace(/"/g, '\\"') %>`;
+
+      const outputElement = document.getElementById("jsonOutput");
+
+      try {
+        const jsonObject = JSON.parse(rawData);
+        const prettyJson = JSON.stringify(jsonObject, null, 2);
+
+        outputElement.textContent = prettyJson;
+      } catch (e) {
+        console.error("Gagal parse JSON:", e);
+        outputElement.textContent = rawData;
+      }
+    </script>
   </body>
 </html>

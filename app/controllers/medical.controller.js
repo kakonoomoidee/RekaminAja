@@ -111,11 +111,40 @@ exports.addPage = async (req, res) => {
 /**
  * STORE MEDICAL RECORD
  */
+/**
+ * STORE MEDICAL RECORD
+ */
 exports.store = async (req, res) => {
   try {
-    const { patientHash, doctorHash, diagnosis, treatment } = req.body;
+    const {
+      patientHash,
+      doctorHash, // <--- INI BIANG KEROKNYA KALO KOSONG
+      diagnosis,
+      treatment,
+      tension,
+      weight,
+      height,
+      pulse,
+    } = req.body;
+
+    // --- VALIDASI TAMBAHAN ---
+    // Cek kalo doctorHash kosong
+    if (!doctorHash || doctorHash.trim() === "") {
+      console.error("Error: Doctor Hash kosong!");
+      // Bisa redirect balik atau kasih pesan error
+      return res.send(
+        "Gagal: Mohon pilih Dokter terlebih dahulu sebelum menyimpan!"
+      );
+    }
+    // -------------------------
 
     const plainData = JSON.stringify({
+      vitals: {
+        tension,
+        weight,
+        height,
+        pulse,
+      },
       diagnosis,
       treatment,
     });
@@ -133,7 +162,7 @@ exports.store = async (req, res) => {
     res.redirect(`/admin/medical?patientHash=${patientHash}`);
   } catch (err) {
     console.error(err);
-    res.send("Gagal tambah rekam medis");
+    res.send("Gagal tambah rekam medis: " + err.message);
   }
 };
 
