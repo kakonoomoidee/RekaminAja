@@ -1,6 +1,26 @@
 const contract = require("../config/contract");
 const web3 = require("../config/web3");
 
+// Mapping Kode Poli (Harus sama persis text-nya dengan dropdown di UI)
+const poliCodes = {
+  "Poli Umum": "01",
+  "Poli VCT & PDP": "02",
+  "Poli Gigi & Mulut": "03",
+  "Poli Bedah Umum": "04",
+  "Poli Bedah Orthopedi": "05",
+  "Poli Penyakit Dalam": "06",
+  "Poli Kebidanan & Kandungan": "07",
+  "Poli Anak": "08",
+  "Poli Saraf": "09",
+  "Poli Urologi": "10",
+  "Poli THT": "11",
+  "Poli Mata": "12",
+  "Poli Psikiatri": "13",
+  "Poli Kulit & Kelamin": "14",
+  "Poli Rehab Medik": "15",
+  "Poli Jantung & Pembuluh Darah": "16",
+};
+
 function hash(data) {
   return web3.utils.keccak256(data);
 }
@@ -41,21 +61,58 @@ exports.addPage = (req, res) => {
 };
 
 /**
- * STORE DOKTER
+ * STORE DOKTER (AUTO ID GENERATOR)
  */
 exports.store = async (req, res) => {
   try {
-    const { doctorId, name, specialization } = req.body;
+    // Kita cuma ambil name & specialization, ID-nya kita bikin sendiri
+    const { name, specialization } = req.body;
+    const adminAccount = req.session.admin;
 
-    await contract.methods.registerDoctor(doctorId, name, specialization).send({
-      from: req.session.admin,
-      gas: 300000,
-    });
+    console.log(`🤖 Generating ID for: ${name} (${specialization})...`);
 
+    // 1. Hitung urutan dokter di poli tersebut
+    const totalDoctors = await contract.methods.getDoctorCount().call();
+    let poliCount = 0;
+
+    // Loop semua dokter utk hitung yang punya spesialisasi sama
+    // (Note: Idealnya smart contract punya counter per poli, tapi cara ini oke buat skala kecil)
+    for (let i = 0; i < totalDoctors; i++) {
+      const doc = await contract.methods.getDoctorByIndex(i).call();
+      if (doc.specialization === specialization) {
+        poliCount++;
+      }
+    }
+
+    // 2. Generate ID Format: DOC-[KODE]-[URUTAN]
+    const code = poliCodes[specialization] || "99"; // 99 default kalo ga ketemu
+    const sequence = (poliCount + 1).toString().padStart(3, "0"); // jadi 001, 002
+    const autoDoctorId = `DOC-${code}-${sequence}`;
+
+    console.log(`✅ ID Generated: ${autoDoctorId}`);
+
+    // 3. Estimasi Gas (Safety buat Web3 v4)
+    const gasEstimate = await contract.methods
+      .registerDoctor(autoDoctorId, name, specialization)
+      .estimateGas({ from: adminAccount });
+
+    // Konversi BigInt ke String Integer + Buffer 20%
+    const gasLimit = Math.floor(Number(gasEstimate) * 1.2).toString();
+
+    // 4. Eksekusi Transaksi
+    await contract.methods
+      .registerDoctor(autoDoctorId, name, specialization)
+      .send({
+        from: adminAccount,
+        gas: gasLimit,
+      });
+
+    console.log("🎉 Dokter berhasil ditambahkan ke Blockchain");
     res.redirect("/admin/doctors");
   } catch (err) {
-    console.error(err);
-    res.send("Gagal tambah dokter");
+    console.error("❌ Error Add Doctor:", err);
+    // Tampilkan error di browser biar tau kenapa
+    res.status(500).send("Gagal tambah dokter: " + (err.message || err));
   }
 };
 
@@ -99,11 +156,18 @@ exports.update = async (req, res) => {
     const { doctorIdHash } = req.params;
     const { name, specialization } = req.body;
 
+    // Estimasi gas dulu
+    const gasEstimate = await contract.methods
+      .updateDoctor(doctorIdHash, name, specialization)
+      .estimateGas({ from: req.session.admin });
+
+    const gasLimit = Math.floor(Number(gasEstimate) * 1.2).toString();
+
     await contract.methods
       .updateDoctor(doctorIdHash, name, specialization)
       .send({
         from: req.session.admin,
-        gas: 300000,
+        gas: gasLimit,
       });
 
     res.redirect("/admin/doctors");
@@ -120,9 +184,15 @@ exports.destroy = async (req, res) => {
   try {
     const { doctorIdHash } = req.params;
 
+    const gasEstimate = await contract.methods
+      .deleteDoctor(doctorIdHash)
+      .estimateGas({ from: req.session.admin });
+
+    const gasLimit = Math.floor(Number(gasEstimate) * 1.2).toString();
+
     await contract.methods.deleteDoctor(doctorIdHash).send({
       from: req.session.admin,
-      gas: 200000,
+      gas: gasLimit,
     });
 
     res.redirect("/admin/doctors");

@@ -25,7 +25,6 @@
       };
     </script>
     <style>
-      /* Custom Scrollbar (Sama kayak Add) */
       .custom-scrollbar::-webkit-scrollbar {
         width: 6px;
       }
@@ -112,7 +111,6 @@
               <label class="block text-sm font-medium text-slate-300"
                 >Spesialisasi</label
               >
-
               <input
                 type="hidden"
                 name="specialization"
@@ -127,7 +125,6 @@
                 class="w-full text-left pl-10 pr-10 py-3 bg-slate-950 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-white transition-all flex items-center justify-between relative"
               >
                 <span id="selectedText"><%= doctor.specialization %></span>
-
                 <div
                   class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
                 >
@@ -145,7 +142,6 @@
                     />
                   </svg>
                 </div>
-
                 <div
                   class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-slate-500"
                 >
@@ -173,94 +169,99 @@
                 <div class="p-1 space-y-1">
                   <div
                     class="dropdown-item px-4 py-2 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg cursor-pointer transition-colors text-sm"
-                    data-value="Umum"
+                    data-value="Poli Umum"
                   >
-                    Dokter Umum
+                    Poli Umum
                   </div>
                   <div
                     class="dropdown-item px-4 py-2 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg cursor-pointer transition-colors text-sm"
-                    data-value="Gigi"
+                    data-value="Poli VCT & PDP"
                   >
-                    Dokter Gigi
-                  </div>
-                  <div class="h-px bg-slate-700 my-1"></div>
-                  <div
-                    class="dropdown-item px-4 py-2 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg cursor-pointer transition-colors text-sm"
-                    data-value="Penyakit Dalam"
-                  >
-                    Sp.PD - Penyakit Dalam
+                    Poli VCT & PDP
                   </div>
                   <div
                     class="dropdown-item px-4 py-2 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg cursor-pointer transition-colors text-sm"
-                    data-value="Anak"
+                    data-value="Poli Gigi & Mulut"
                   >
-                    Sp.A - Anak
+                    Poli Gigi & Mulut
                   </div>
                   <div
                     class="dropdown-item px-4 py-2 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg cursor-pointer transition-colors text-sm"
-                    data-value="Bedah"
+                    data-value="Poli Bedah Umum"
                   >
-                    Sp.B - Bedah
+                    Poli Bedah Umum
                   </div>
                   <div
                     class="dropdown-item px-4 py-2 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg cursor-pointer transition-colors text-sm"
-                    data-value="Kandungan & Kebidanan"
+                    data-value="Poli Bedah Orthopedi"
                   >
-                    Sp.OG - Kandungan & Kebidanan
+                    Poli Bedah Orthopedi
                   </div>
                   <div
                     class="dropdown-item px-4 py-2 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg cursor-pointer transition-colors text-sm"
-                    data-value="Saraf"
+                    data-value="Poli Penyakit Dalam"
                   >
-                    Sp.N - Saraf (Neurologi)
+                    Poli Penyakit Dalam
                   </div>
                   <div
                     class="dropdown-item px-4 py-2 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg cursor-pointer transition-colors text-sm"
-                    data-value="Mata"
+                    data-value="Poli Kebidanan & Kandungan"
                   >
-                    Sp.M - Mata
+                    Poli Kebidanan & Kandungan
                   </div>
                   <div
                     class="dropdown-item px-4 py-2 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg cursor-pointer transition-colors text-sm"
-                    data-value="THT-KL"
+                    data-value="Poli Anak"
                   >
-                    Sp.T.H.T.K.L - Telinga Hidung Tenggorok
+                    Poli Anak
                   </div>
                   <div
                     class="dropdown-item px-4 py-2 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg cursor-pointer transition-colors text-sm"
-                    data-value="Jantung & Pembuluh Darah"
+                    data-value="Poli Saraf"
                   >
-                    Sp.JP - Jantung & Pembuluh Darah
+                    Poli Saraf
                   </div>
                   <div
                     class="dropdown-item px-4 py-2 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg cursor-pointer transition-colors text-sm"
-                    data-value="Paru"
+                    data-value="Poli Urologi"
                   >
-                    Sp.P - Paru
+                    Poli Urologi
                   </div>
                   <div
                     class="dropdown-item px-4 py-2 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg cursor-pointer transition-colors text-sm"
-                    data-value="Kulit & Kelamin"
+                    data-value="Poli THT"
                   >
-                    Sp.KK - Kulit & Kelamin
+                    Poli THT
                   </div>
                   <div
                     class="dropdown-item px-4 py-2 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg cursor-pointer transition-colors text-sm"
-                    data-value="Orthopedi"
+                    data-value="Poli Mata"
                   >
-                    Sp.OT - Orthopedi
+                    Poli Mata
                   </div>
                   <div
                     class="dropdown-item px-4 py-2 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg cursor-pointer transition-colors text-sm"
-                    data-value="Psikiatri"
+                    data-value="Poli Psikiatri"
                   >
-                    Sp.KJ - Kedokteran Jiwa (Psikiatri)
+                    Poli Psikiatri
                   </div>
                   <div
                     class="dropdown-item px-4 py-2 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg cursor-pointer transition-colors text-sm"
-                    data-value="Radiologi"
+                    data-value="Poli Kulit & Kelamin"
                   >
-                    Sp.Rad - Radiologi
+                    Poli Kulit & Kelamin
+                  </div>
+                  <div
+                    class="dropdown-item px-4 py-2 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg cursor-pointer transition-colors text-sm"
+                    data-value="Poli Rehab Medik"
+                  >
+                    Poli Rehab Medik
+                  </div>
+                  <div
+                    class="dropdown-item px-4 py-2 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg cursor-pointer transition-colors text-sm"
+                    data-value="Poli Jantung & Pembuluh Darah"
+                  >
+                    Poli Jantung & Pembuluh Darah
                   </div>
                 </div>
               </div>
@@ -284,12 +285,10 @@
       const chevron = document.getElementById("chevronIcon");
       const items = document.querySelectorAll(".dropdown-item");
 
-      // Toggle Menu
       trigger.addEventListener("click", () => {
         menu.classList.toggle("hidden");
         chevron.classList.toggle("rotate-180");
 
-        // Highlight border pas aktif (Yellow focus)
         if (!menu.classList.contains("hidden")) {
           trigger.classList.add(
             "ring-2",
@@ -307,18 +306,14 @@
         }
       });
 
-      // Pilih Option
       items.forEach((item) => {
         item.addEventListener("click", () => {
           const value = item.getAttribute("data-value");
           const text = item.textContent;
-
           selectedText.textContent = text;
           selectedText.classList.remove("text-slate-400");
           selectedText.classList.add("text-white");
-
           hiddenInput.value = value;
-
           menu.classList.add("hidden");
           chevron.classList.remove("rotate-180");
           trigger.classList.remove(
@@ -330,7 +325,6 @@
         });
       });
 
-      // Close on outside click
       document.addEventListener("click", (e) => {
         if (!trigger.contains(e.target) && !menu.contains(e.target)) {
           menu.classList.add("hidden");
