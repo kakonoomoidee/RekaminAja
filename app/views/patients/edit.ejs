@@ -50,17 +50,6 @@
           Kembali
         </a>
 
-        <div class="mb-8 text-center">
-          <h1
-            class="text-3xl font-bold text-white flex items-center justify-center gap-3"
-          >
-            <span class="text-yellow-500">✏️</span> Edit Data Pasien
-          </h1>
-          <p class="text-slate-400 mt-2">
-            Perbarui informasi pasien. NIK Hash bersifat permanen.
-          </p>
-        </div>
-
         <div
           class="bg-slate-900 border border-slate-800 rounded-xl p-8 shadow-2xl"
         >
@@ -70,17 +59,34 @@
             class="space-y-6"
           >
             <div
-              class="p-4 bg-slate-950/50 rounded-lg border border-slate-800 mb-4 text-center"
+              class="p-4 bg-slate-950/50 rounded-lg border border-slate-800 mb-4 flex items-center gap-4"
             >
-              <p
-                class="text-xs text-slate-500 uppercase tracking-wider font-semibold"
-              >
-                NIK Hash (Locked)
-              </p>
-              <code
-                class="font-mono text-sm text-slate-300 mt-1 break-all block"
-                ><%= patient.nikHash %></code
-              >
+              <div class="p-2 bg-slate-800 rounded text-slate-400">
+                <svg
+                  class="w-6 h-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
+                </svg>
+              </div>
+              <div class="overflow-hidden">
+                <p
+                  class="text-xs text-slate-500 uppercase tracking-wider font-semibold"
+                >
+                  NIK Hash (Identity Locked)
+                </p>
+                <code
+                  class="font-mono text-sm text-yellow-500/80 mt-1 break-all block"
+                  ><%= patient.nikHash %></code
+                >
+              </div>
             </div>
 
             <div class="space-y-2">
@@ -88,24 +94,68 @@
                 >Nama Lengkap</label
               >
               <input
+                type="text"
                 name="name"
+                id="nameInput"
                 value="<%= patient.name %>"
-                class="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-white transition-all"
+                class="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-white transition-all placeholder-slate-600"
+                placeholder="Klik untuk ubah nama..."
               />
+              <p class="text-xs text-slate-500">
+                * Klik kolom untuk mengubah nama.
+              </p>
             </div>
 
             <div class="space-y-2">
               <label class="block text-sm font-medium text-slate-300"
                 >Alamat Domisili</label
               >
+
+              <div
+                class="flex items-start gap-3 p-3 bg-slate-800/50 rounded border border-slate-700/50 mb-2"
+              >
+                <div class="mt-0.5 min-w-[16px]">
+                  <svg
+                    class="w-4 h-4 text-blue-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+                <div class="overflow-hidden w-full">
+                  <p class="text-xs text-slate-400 mb-1">
+                    Current Address Hash (Encrypted):
+                  </p>
+                  <code
+                    class="block font-mono text-xs text-blue-300 break-all leading-tight"
+                  >
+                    <%= patient.address || 'No Data' %>
+                  </code>
+                </div>
+              </div>
+
               <textarea
                 name="address"
                 rows="3"
-                class="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-white transition-all resize-none"
+                class="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-white placeholder-slate-600 transition-all resize-none"
+                placeholder="Biarkan kosong jika tidak ingin mengubah alamat. Ketik alamat BARU disini untuk update."
               ></textarea>
+
+              <p class="text-xs text-slate-500">
+                * Alamat lama terenkripsi. Isi form di atas HANYA jika ingin
+                mengganti alamat domisili.
+              </p>
             </div>
 
             <button
+              type="submit"
               class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-3.5 rounded-lg shadow-lg shadow-yellow-600/20 transition-transform active:scale-[0.98]"
             >
               Update Informasi
@@ -114,5 +164,26 @@
         </div>
       </div>
     </main>
+
+    <script>
+      // ==========================================
+      // LOGIC NAMA (Click clear, Blur restore)
+      // ==========================================
+
+      const nameInput = document.getElementById("nameInput");
+      const originalName = "<%= patient.name || '' %>";
+
+      nameInput.addEventListener("focus", () => {
+        if (nameInput.value === originalName) {
+          nameInput.value = "";
+        }
+      });
+
+      nameInput.addEventListener("blur", () => {
+        if (nameInput.value.trim() === "") {
+          nameInput.value = originalName;
+        }
+      });
+    </script>
   </body>
 </html>

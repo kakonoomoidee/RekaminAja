@@ -91,6 +91,7 @@ exports.editPage = async (req, res) => {
       patient: {
         nikHash,
         name: p.name,
+        address: p.addressHash,
       },
     });
   } catch (err) {
@@ -107,9 +108,17 @@ exports.update = async (req, res) => {
     const { nikHash } = req.params;
     const { name, address } = req.body;
 
-    const addressHash = hash(address);
+    const oldPatient = await contract.methods.patients(nikHash).call();
 
-    await contract.methods.updatePatient(nikHash, name, addressHash).send({
+    let finalAddressHash;
+
+    if (address && address.trim() !== "") {
+      finalAddressHash = hash(address);
+    } else {
+      finalAddressHash = oldPatient.addressHash;
+    }
+
+    await contract.methods.updatePatient(nikHash, name, finalAddressHash).send({
       from: req.session.admin,
       gas: 300000,
     });
